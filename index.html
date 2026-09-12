@@ -1,1511 +1,1153 @@
 <!DOCTYPE html>
-<html>
-
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>JSFiddle ydta4mcs</title>
-
-  <style>
-    
-  </style>
-
-  
-</head>
-<body>
-  <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Money Manager & Work/Travel Tracker App</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    :root {
-      --primary: #4f46e5;
-      --primary-light: #e0e7ff;
-      --primary-dark: #3730a3;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --warning-bg: #fffbeb;
-      --danger: #ef4444;
-      --danger-bg: #fef2f2;
-      --radius: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FinPulse - Luxury Personal Finance</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #070b19;
+            color: #f8fafc;
+            padding: 16px;
+            padding-bottom: 110px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 440px;
+            background: linear-gradient(145deg, #131c31, #0f172a);
+            padding: 24px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+            text-align: center;
+            font-weight: 800;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+        .subtitle {
+            font-size: 0.7rem;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-    
-    body { 
-      background-color: var(--bg); 
-      color: var(--text-main); 
-      padding: 16px 16px 100px 16px;
-      max-width: 480px; 
-      margin: 0 auto; 
-      -webkit-tap-highlight-color: transparent; 
-    }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
 
-    /* PERIOD SELECTOR */
-    .period-selector {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
+        .period-filter {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 10px;
+            margin-bottom: 8px;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 12px;
+            border-radius: 16px;
+            border: 1px solid #334155;
+        }
+        .period-group label {
+            display: block;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .pay-info-text {
+            font-size: 0.72rem;
+            color: #38bdf8;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 500;
+            background: rgba(56, 189, 248, 0.08);
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px dashed rgba(56, 189, 248, 0.2);
+        }
 
-    .period-selector select {
-      flex: 1;
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1.5px solid var(--border);
-      background: var(--card-bg);
-      font-weight: 700;
-      font-size: 0.88rem;
-      color: var(--text-main);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-      outline: none;
-      cursor: pointer;
-      transition: border-color 0.2s;
-    }
+        select, input[type="date"], input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 10px 14px;
+            background-color: #0b1329;
+            border: 1px solid #475569;
+            color: #f8fafc;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        select:focus, input:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+        }
+        input.auto-input {
+            background-color: #111c33;
+            color: #38bdf8;
+            font-weight: 600;
+            border-style: dashed;
+        }
 
-    .period-selector select:focus {
-      border-color: var(--primary);
-    }
+        /* Summary Grids */
+        .summary-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .card-box {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+        }
+        .card-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+        }
+        .card-box.income-card::before { background: #34d399; }
+        .card-box.outcome-card::before { background: #f87171; }
+        
+        .card-title {
+            font-size: 0.65rem;
+            color: #94a3b8;
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+        .card-value {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #f8fafc;
+        }
 
-    /* HERO SUMMARY CARD */
-    .hero-summary {
-      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
-      border-radius: var(--radius);
-      padding: 22px 20px;
-      color: #fff;
-      margin-bottom: 16px;
-      box-shadow: 0 12px 28px -6px rgba(49, 46, 129, 0.3);
-      position: relative;
-      overflow: hidden;
-    }
+        .section-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #38bdf8;
+            margin: 20px 0 10px 0;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+            padding-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .form-group {
+            margin-bottom: 12px;
+        }
+        label {
+            display: block;
+            font-size: 0.78rem;
+            margin-bottom: 4px;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
 
-    .hero-summary::before {
-      content: '';
-      position: absolute;
-      top: -30px;
-      right: -30px;
-      width: 120px;
-      height: 120px;
-      background: rgba(255, 255, 255, 0.06);
-      border-radius: 50%;
-    }
+        .dynamic-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+        .dynamic-row input {
+            flex: 1;
+        }
+        .btn-icon {
+            background: rgba(248, 113, 113, 0.1);
+            color: #f87171;
+            border: 1px solid rgba(248, 113, 113, 0.2);
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .btn-icon:hover {
+            background: rgba(248, 113, 113, 0.2);
+        }
 
-    .hero-grid { 
-      display: grid; 
-      grid-template-columns: 1fr 1fr; 
-      gap: 16px; 
-    }
+        .btn-add, .btn-action {
+            background: rgba(56, 189, 248, 0.1);
+            color: #38bdf8;
+            border: 1px dashed rgba(56, 189, 248, 0.3);
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 6px;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .btn-add:hover, .btn-action:hover {
+            background: rgba(56, 189, 248, 0.2);
+        }
+        .btn-primary {
+            background: #38bdf8;
+            color: #070b19;
+            border: none;
+            border-style: solid;
+        }
+        .btn-primary:hover {
+            background: #0ea5e9;
+        }
 
-    .hero-box {
-      background: rgba(255, 255, 255, 0.08);
-      padding: 12px 14px;
-      border-radius: 14px;
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-    }
+        /* Progress & Allocations */
+        .progress-container {
+            margin-top: 24px;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid #334155;
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .progress-bar-bg {
+            width: 100%;
+            height: 10px;
+            background: #070b19;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #34d399, #38bdf8);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        .net-balance {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
 
-    .hero-label { 
-      font-size: 0.7rem; 
-      font-weight: 700; 
-      color: #a5b4fc; 
-      text-transform: uppercase; 
-      letter-spacing: 0.6px; 
-      margin-bottom: 4px;
-    }
+        .allocation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .alloc-card {
+            background: rgba(20, 30, 50, 0.6);
+            border: 1px solid #334155;
+            padding: 10px 12px;
+            border-radius: 12px;
+        }
+        .alloc-label {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+        }
+        .alloc-value {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #38bdf8;
+            margin-top: 4px;
+        }
 
-    .hero-sub-val { 
-      font-size: 1.15rem; 
-      font-weight: 800; 
-    }
+        /* --- CALENDAR & OT CALC --- */
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+        .cal-header-day {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #64748b;
+            font-weight: 700;
+            padding-bottom: 4px;
+        }
+        .cal-day {
+            background: rgba(20, 30, 50, 0.6);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            min-height: 52px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 4px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        .cal-day:hover {
+            border-color: #38bdf8;
+            background: rgba(56, 189, 248, 0.1);
+        }
+        .cal-day.empty {
+            background: transparent;
+            border: none;
+            cursor: default;
+            min-height: 52px;
+        }
+        .cal-day-num {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #cbd5e1;
+            line-height: 1;
+            margin-bottom: 2px;
+        }
+        .cal-day.sunday .cal-day-num, .cal-day.holiday .cal-day-num {
+            color: #f87171;
+        }
+        .cal-day.holiday {
+            border-color: rgba(248, 113, 113, 0.4);
+            background: rgba(248, 113, 113, 0.05);
+        }
+        .cal-day-desc {
+            font-size: 0.5rem;
+            color: #94a3b8;
+            line-height: 1.1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+        }
+        .cal-day-income {
+            font-size: 0.5rem;
+            font-weight: 600;
+            color: #34d399;
+            margin-top: auto;
+            text-align: right;
+            line-height: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-    /* PAYROLL NOTICE BOX */
-    .payroll-notice {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      border-radius: 14px;
-      padding: 12px 14px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: #1e40af;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-    }
+        /* Modal Pop-up Kalender Ringkasan */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(7, 11, 25, 0.8);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 16px;
+        }
+        .modal-container {
+            background: linear-gradient(145deg, #131c31, #0f172a);
+            border: 1px solid #38bdf8;
+            width: 100%;
+            max-width: 380px;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 10px;
+        }
+        .modal-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #38bdf8;
+        }
 
-    .payroll-notice span { font-size: 1.1rem; }
-
-    /* INVESTMENT CAROUSEL */
-    .inv-section-title {
-      font-size: 0.75rem;
-      font-weight: 800;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin: 16px 0 10px 4px;
-    }
-
-    .inv-scroll-container {
-      display: flex;
-      gap: 12px;
-      overflow-x: auto;
-      padding-bottom: 12px;
-      margin-bottom: 16px;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      cursor: grab;
-      user-select: none;
-    }
-
-    .inv-scroll-container:active { cursor: grabbing; }
-    .inv-scroll-container::-webkit-scrollbar { height: 4px; }
-    .inv-scroll-container::-webkit-scrollbar-track { background: #e2e8f0; border-radius: 4px; }
-    .inv-scroll-container::-webkit-scrollbar-thumb { background: #c7d2fe; border-radius: 4px; }
-
-    .inv-card {
-      width: 145px;
-      min-width: 145px;
-      flex-shrink: 0;
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 14px 12px;
-      border: 1px solid var(--border);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-      scroll-snap-align: start;
-    }
-
-    .inv-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-    .inv-title { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); }
-    .inv-pct { font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border-radius: 6px; background: var(--primary-light); color: var(--primary); }
-    .inv-val { font-size: 0.92rem; font-weight: 800; color: var(--text-main); margin-top: 2px; }
-
-    .inv-progress-bar { height: 4px; width: 100%; background: #e2e8f0; border-radius: 2px; margin-top: 8px; overflow: hidden; }
-    .inv-progress-fill { height: 100%; background: var(--primary); border-radius: 2px; }
-
-    /* TAB CONTENTS */
-    .tab-content { display: none; }
-    .tab-content.active { display: block; animation: fadeIn 0.25s ease-in-out; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .card { 
-      background: var(--card-bg); 
-      border-radius: var(--radius); 
-      padding: 18px; 
-      margin-bottom: 16px; 
-      border: 1px solid var(--border); 
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); 
-    }
-    
-    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-    .card-header h2 { font-size: 0.95rem; font-weight: 700; color: var(--text-main); }
-    
-    .badge { font-size: 0.68rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
-    .badge-blue { background: var(--primary-light); color: var(--primary-dark); }
-    .badge-red { background: var(--danger-bg); color: #991b1b; }
-    .badge-amber { background: var(--warning-bg); color: #92400e; }
-    .badge-green { background: #d1fae5; color: #065f46; }
-
-    .sub-section { font-size: 0.72rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin: 12px 0 8px 0; letter-spacing: 0.5px; }
-
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .input-group { margin-bottom: 10px; }
-    .input-group label { display: block; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; }
-    .input-group input, .input-group select { 
-      width: 100%; 
-      padding: 10px 12px; 
-      border: 1.5px solid var(--border); 
-      border-radius: 12px; 
-      font-size: 0.88rem; 
-      font-weight: 600; 
-      background: #f8fafc; 
-      transition: all 0.2s; 
-    }
-    
-    .input-group input[readonly] { background: #f1f5f9; color: #475569; border-color: #cbd5e1; cursor: not-allowed; }
-    .input-group input:focus:not([readonly]), .input-group select:focus { outline: none; border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12); }
-
-    .calc-res { 
-      background: #f8fafc; 
-      padding: 14px; 
-      border-radius: 14px; 
-      border: 1px dashed var(--border); 
-      font-size: 0.82rem; 
-      margin-top: 12px; 
-      line-height: 1.5; 
-    }
-    
-    .btn-primary { 
-      width: 100%; 
-      background: var(--primary); 
-      color: #fff; 
-      border: none; 
-      padding: 12px; 
-      border-radius: 12px; 
-      font-weight: 700; 
-      font-size: 0.85rem; 
-      margin-top: 10px; 
-      cursor: pointer; 
-      transition: background 0.2s; 
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
-    }
-    .btn-primary:hover { background: #4338ca; }
-
-    .btn-amber {
-      width: 100%; 
-      background: var(--warning); 
-      color: #fff; 
-      border: none; 
-      padding: 12px; 
-      border-radius: 12px; 
-      font-weight: 700; 
-      font-size: 0.85rem; 
-      margin-top: 10px; 
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
-    }
-
-    .btn-secondary-outline {
-      width: 100%;
-      background: transparent;
-      color: var(--primary);
-      border: 1.5px solid var(--primary-light);
-      padding: 8px 12px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 0.75rem;
-      margin-bottom: 12px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-secondary-outline:hover { background: var(--primary-light); }
-
-    .btn-danger-outline {
-      width: 100%;
-      background: transparent;
-      color: var(--danger);
-      border: 1.5px solid #fca5a5;
-      padding: 10px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 0.8rem;
-      margin-top: 14px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-danger-outline:hover {
-      background: var(--danger-bg);
-      border-color: var(--danger);
-    }
-
-    /* CALENDAR */
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 5px;
-      margin-top: 8px;
-      text-align: center;
-    }
-
-    .cal-day-header {
-      font-size: 0.68rem;
-      font-weight: 800;
-      color: var(--text-muted);
-      padding: 4px 0;
-    }
-
-    .cal-date {
-      padding: 4px 2px;
-      border-radius: 12px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      cursor: pointer;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 58px;
-      transition: all 0.15s ease;
-    }
-
-    .cal-date.empty { background: transparent; border: none; cursor: default; }
-    .cal-date.red-day { color: var(--danger); background: var(--danger-bg); border-color: #fca5a5; }
-    .cal-date.selected { border: 2px solid var(--primary); background: var(--primary-light); }
-
-    .cal-badge {
-      font-size: 0.52rem;
-      font-weight: 800;
-      padding: 1px 3px;
-      border-radius: 4px;
-      margin-top: 2px;
-      line-height: 1.1;
-      width: 100%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .badge-work-day { background: #dbeafe; color: #1e40af; }
-    .badge-travel-day { background: #fef3c7; color: #92400e; }
-    .badge-location { background: #e0f2fe; color: #0369a1; border: 0.5px solid #bae6fd; font-weight: 700; }
-
-    .toggle-red {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--danger);
-      margin-bottom: 12px;
-      cursor: pointer;
-    }
-
-    /* CHART CONTAINERS */
-    .chart-box {
-      position: relative;
-      width: 100%;
-      max-width: 280px;
-      margin: 10px auto 16px auto;
-    }
-
-    /* BOTTOM NAV */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 480px;
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(12px);
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 0 16px 0;
-      z-index: 999;
-    }
-
-    .nav-btn {
-      background: none;
-      border: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      cursor: pointer;
-      width: 33.3%;
-      transition: color 0.2s;
-    }
-
-    .nav-btn.active { color: var(--primary); }
-    .nav-icon { font-size: 1.25rem; }
-
-    .text-green { color: #34d399 !important; }
-    .text-red { color: #f87171 !important; }
-  </style>
+        /* Bottom Nav Bar (2 Tabs) */
+        .bottom-nav {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 32px);
+            max-width: 440px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        .nav-item {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 10px;
+            border-radius: 14px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.3s ease;
+        }
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+            transition: transform 0.2s ease;
+        }
+        .nav-item:hover {
+            color: #cbd5e1;
+        }
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(129, 140, 248, 0.2));
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.15);
+        }
+        .nav-item.active svg {
+            transform: scale(1.1);
+        }
+    </style>
 </head>
 <body>
 
-  <!-- PILIHAN PERIODE (BULAN & TAHUN) -->
-  <div class="period-selector">
-    <select id="sel_bulan" onchange="onPeriodChange()">
-      <option value="1">Januari</option>
-      <option value="2">Februari</option>
-      <option value="3">Maret</option>
-      <option value="4">April</option>
-      <option value="5">Mei</option>
-      <option value="6">Juni</option>
-      <option value="7">Juli</option>
-      <option value="8">Agustus</option>
-      <option value="9">September</option>
-      <option value="10">Oktober</option>
-      <option value="11">November</option>
-      <option value="12">Desember</option>
-    </select>
-    <select id="sel_tahun" onchange="onPeriodChange()"></select>
-  </div>
+    <!-- TAB 1: PERSONAL -->
+    <div id="tabPersonal" class="container tab-content active">
+        <h1>FinPulse</h1>
+        <div class="subtitle">Personal Finance Intelligence</div>
 
-  <!-- TOP SUMMARY CARD -->
-  <div class="hero-summary">
-    <div class="hero-grid">
-      <div class="hero-box">
-        <div class="hero-label">Total Pemasukan</div>
-        <div class="hero-sub-val text-green" id="res_income">Rp 0</div>
-      </div>
-      <div class="hero-box">
-        <div class="hero-label">Total Pengeluaran</div>
-        <div class="hero-sub-val text-red" id="res_outcome">Rp 0</div>
-      </div>
-    </div>
-  </div>
+        <div class="period-filter">
+            <div class="period-group">
+                <label>Bulan</label>
+                <select id="filterMonth" onchange="onPeriodChange()">
+                    <option value="0">Januari</option>
+                    <option value="1">Februari</option>
+                    <option value="2">Maret</option>
+                    <option value="3">April</option>
+                    <option value="4">Mei</option>
+                    <option value="5">Juni</option>
+                    <option value="6">Juli</option>
+                    <option value="7">Agustus</option>
+                    <option value="8">September</option>
+                    <option value="9">Oktober</option>
+                    <option value="10">November</option>
+                    <option value="11">Desember</option>
+                </select>
+            </div>
+            <div class="period-group">
+                <label>Tahun</label>
+                <select id="filterYear" onchange="onPeriodChange()">
+                    <!-- Diisi otomatis -->
+                </select>
+            </div>
+        </div>
+        
+        <div class="pay-info-text" id="payInfoText">
+            Pendapatan bulan september akan dibayar pada bulan oktober
+        </div>
+        
+        <div class="summary-grid-2">
+            <div class="card-box income-card">
+                <div class="card-title">Total Income</div>
+                <div class="card-value" id="cardIncome">Rp 0</div>
+            </div>
+            <div class="card-box outcome-card">
+                <div class="card-title">Total Outcome</div>
+                <div class="card-value" id="cardOutcome">Rp 0</div>
+            </div>
+        </div>
 
-  <!-- INFORMASI PENGGAJIAN DINAMIS -->
-  <div class="payroll-notice">
-    <span>📅</span>
-    <div id="payroll_notice_text">Income tersebut akan diterima pada bulan berikutnya.</div>
-  </div>
+        <div class="section-title">📥 Pemasukan (Income)</div>
+        <div class="form-group">
+            <label>Gaji Pokok</label>
+            <input type="text" id="baseSalary" placeholder="0" oninput="formatNumberInput(this); autoSavePersonalData(); calculateAll();">
+        </div>
+        <div class="form-group">
+            <label>Tunjangan</label>
+            <input type="text" id="allowance" placeholder="0" oninput="formatNumberInput(this); autoSavePersonalData(); calculateAll();">
+        </div>
+        <div class="form-group">
+            <label>Bonus</label>
+            <input type="text" id="bonus" placeholder="0" oninput="formatNumberInput(this); autoSavePersonalData(); calculateAll();">
+        </div>
 
-  <!-- HORIZONTAL INVESTMENT CAROUSEL -->
-  <div class="inv-section-title">Alokasi Investasi (Auto-Distributed)</div>
-  <div class="inv-scroll-container" id="inv_carousel">
-    <div class="inv-card">
-      <div class="inv-card-header"><span class="inv-title">Emergency</span><span class="inv-pct">10%</span></div>
-      <div class="inv-val" id="inv_emergency">Rp 0</div>
-      <div class="inv-progress-bar"><div class="inv-progress-fill" style="width: 10%;"></div></div>
-    </div>
-    <div class="inv-card">
-      <div class="inv-card-header"><span class="inv-title">Education</span><span class="inv-pct">10%</span></div>
-      <div class="inv-val" id="inv_education">Rp 0</div>
-      <div class="inv-progress-bar"><div class="inv-progress-fill" style="width: 10%;"></div></div>
-    </div>
-    <div class="inv-card">
-      <div class="inv-card-header"><span class="inv-title">Emas</span><span class="inv-pct">10%</span></div>
-      <div class="inv-val" id="inv_emas">Rp 0</div>
-      <div class="inv-progress-bar"><div class="inv-progress-fill" style="width: 10%;"></div></div>
-    </div>
-    <div class="inv-card">
-      <div class="inv-card-header"><span class="inv-title">Saham</span><span class="inv-pct">10%</span></div>
-      <div class="inv-val" id="inv_saham">Rp 0</div>
-      <div class="inv-progress-bar"><div class="inv-progress-fill" style="width: 10%;"></div></div>
-    </div>
-    <div class="inv-card">
-      <div class="inv-card-header"><span class="inv-title">Liburan</span><span class="inv-pct">40%</span></div>
-      <div class="inv-val" id="inv_liburan">Rp 0</div>
-      <div class="inv-progress-bar"><div class="inv-progress-fill" style="width: 40%;"></div></div>
-    </div>
-    <div class="inv-card">
-      <div class="inv-card-header"><span class="inv-title">Self Reward</span><span class="inv-pct">20%</span></div>
-      <div class="inv-val" id="inv_reward">Rp 0</div>
-      <div class="inv-progress-bar"><div class="inv-progress-fill" style="width: 20%;"></div></div>
-    </div>
-  </div>
+        <div style="font-size: 0.75rem; color: #38bdf8; margin: 12px 0 6px 0; font-weight: 600;">Perhitungan Otomatis (dari OT Calc):</div>
+        <div class="form-group">
+            <label>1. OT (Overtime)</label>
+            <input type="text" id="autoOvertime" class="auto-input" value="0" readonly>
+        </div>
+        <div class="form-group">
+            <label>2. TN (Travel Normal)</label>
+            <input type="text" id="autoTN" class="auto-input" value="0" readonly>
+        </div>
+        <div class="form-group">
+            <label>3. TW (Travel Weekend)</label>
+            <input type="text" id="autoTW" class="auto-input" value="0" readonly>
+        </div>
+        <div class="form-group">
+            <label>4. FA (Field Allowance)</label>
+            <input type="text" id="autoFA" class="auto-input" value="0" readonly>
+        </div>
 
-  <!-- TAB 1: RESUME KEUANGAN -->
-  <div id="tab1" class="tab-content active">
-    
-    <!-- INCOME -->
-    <div class="card">
-      <div class="card-header">
-        <h2>Pemasukan (Income)</h2>
-        <span class="badge badge-blue">Inflow</span>
-      </div>
-      <div class="grid-2">
-        <div class="input-group">
-          <label>Gaji Pokok</label>
-          <input type="text" id="in_gaji" value="Rp 0" oninput="onGajiChange(this)">
+        <div class="section-title">
+            <span>📤 Pengeluaran (Outcome)</span>
         </div>
-        <div class="input-group">
-          <label>Tunjangan Transport</label>
-          <input type="text" id="in_transport" value="Rp 0" oninput="formatAndCalc(this)">
-        </div>
-        <div class="input-group">
-          <label>Bonus</label>
-          <input type="text" id="in_bonus" value="Rp 0" oninput="formatAndCalc(this)">
-        </div>
-        <div class="input-group">
-          <label>Field Allowance (Auto)</label>
-          <input type="text" id="in_field" value="Rp 0" readonly>
-        </div>
-        <div class="input-group">
-          <label>Lembur (Auto)</label>
-          <input type="text" id="in_lembur" value="Rp 0" readonly>
-        </div>
-        <div class="input-group">
-          <label>Travel TN (Auto)</label>
-          <input type="text" id="in_tn" value="Rp 0" readonly>
-        </div>
-        <div class="input-group">
-          <label>Travel TW (Auto)</label>
-          <input type="text" id="in_tw" value="Rp 0" readonly>
-        </div>
-      </div>
-    </div>
+        <div id="outcomeContainer"></div>
+        <button type="button" class="btn-add" onclick="addOutcomeRow('', ''); autoSavePersonalData();">+ Tambah Pengeluaran Baru</button>
 
-    <!-- OUTCOME PLANNING -->
-    <div class="card">
-      <div class="card-header">
-        <h2>Pengeluaran (Outcome Planning)</h2>
-        <span class="badge badge-red">Outflow</span>
-      </div>
-      
-      <div class="sub-section">SUB 1 - Fixed Cost</div>
-      <div class="grid-2">
-        <div class="input-group"><label>Rumah Tangga</label><input type="text" id="out_rt" class="out-fixed" value="Rp 0" oninput="formatAndCalc(this)"></div>
-        <div class="input-group"><label>Ops Kerja</label><input type="text" id="out_ops" class="out-fixed" value="Rp 0" oninput="formatAndCalc(this)"></div>
-        <div class="input-group"><label>Listrik Rumah</label><input type="text" id="out_listrik" class="out-fixed" value="Rp 0" oninput="formatAndCalc(this)"></div>
-        <div class="input-group"><label>WiFi & Subs</label><input type="text" id="out_wifi" class="out-fixed" value="Rp 0" oninput="formatAndCalc(this)"></div>
-        <div class="input-group"><label>Ken's Health</label><input type="text" id="out_ken" class="out-fixed" value="Rp 0" oninput="formatAndCalc(this)"></div>
-        <div class="input-group"><label>Orang Tua</label><input type="text" id="out_ortu" class="out-fixed" value="Rp 0" oninput="formatAndCalc(this)"></div>
-      </div>
+        <div class="progress-container">
+            <div class="progress-header">
+                <span>Rasio Pengeluaran</span>
+                <span id="progressPercentage">0%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progressBarFill"></div>
+            </div>
+            <div class="net-balance">
+                Sisa Saldo Bersih: <span id="netBalanceVal" style="color: #34d399;">Rp 0</span>
+            </div>
+        </div>
 
-      <div class="sub-section">SUB 2 - Hutang</div>
-      <div class="grid-2">
-        <div class="input-group"><label>Credit Card</label><input type="text" id="out_cc" class="out-debt" value="Rp 0" oninput="formatAndCalc(this)"></div>
-        <div class="input-group"><label>Kredivo</label><input type="text" id="out_kredivo" class="out-debt" value="Rp 0" oninput="formatAndCalc(this)"></div>
-        <div class="input-group"><label>Honest</label><input type="text" id="out_honest" class="out-debt" value="Rp 0" oninput="formatAndCalc(this)"></div>
-        <div class="input-group"><label>Pribadi</label><input type="text" id="out_pribadi" class="out-debt" value="Rp 0" oninput="formatAndCalc(this)"></div>
-        <div class="input-group"><label>Other</label><input type="text" id="out_other" class="out-debt" value="Rp 0" oninput="formatAndCalc(this)"></div>
-      </div>
-
-      <button class="btn-danger-outline" onclick="resetResumeData()">🔄 Reset All Data Resume Bulan Ini</button>
+        <div class="section-title">🎯 Alokasi Otomatis Sisa Dana</div>
+        <div class="allocation-grid">
+            <div class="alloc-card">
+                <div class="alloc-label">Emergency <span>10%</span></div>
+                <div class="alloc-value" id="allocEmergency">Rp 0</div>
+            </div>
+            <div class="alloc-card">
+                <div class="alloc-label">Education <span>10%</span></div>
+                <div class="alloc-value" id="allocEducation">Rp 0</div>
+            </div>
+            <div class="alloc-card">
+                <div class="alloc-label">Emas <span>10%</span></div>
+                <div class="alloc-value" id="allocGold">Rp 0</div>
+            </div>
+            <div class="alloc-card">
+                <div class="alloc-label">Saham <span>10%</span></div>
+                <div class="alloc-value" id="allocStocks">Rp 0</div>
+            </div>
+            <div class="alloc-card">
+                <div class="alloc-label">Liburan <span>40%</span></div>
+                <div class="alloc-value" id="allocHoliday">Rp 0</div>
+            </div>
+            <div class="alloc-card">
+                <div class="alloc-label">Self Reward <span>20%</span></div>
+                <div class="alloc-value" id="allocReward">Rp 0</div>
+            </div>
+        </div>
     </div>
 
-  </div>
+    <!-- TAB 2: OT CALC & KALENDAR -->
+    <div id="tabOtCalc" class="container tab-content">
+        <h1>OT Calc</h1>
+        <div class="subtitle">Overtime, Travel & Calendar Log</div>
 
-  <!-- TAB 2: KALKULATOR LEMBUR & WORK/TRAVEL TRACKER -->
-  <div id="tab2" class="tab-content">
+        <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid #334155; padding: 14px; border-radius: 16px; margin-top: 15px;">
+            <div style="font-size: 0.85rem; font-weight: 700; color: #38bdf8; margin-bottom: 10px;">Input Aktivitas & OT (Rentang Tanggal)</div>
+            <div class="form-group">
+                <label>Tanggal Mulai</label>
+                <input type="date" id="inputStartDate">
+            </div>
+            <div class="form-group">
+                <label>Tanggal Selesai</label>
+                <input type="date" id="inputEndDate">
+            </div>
+            <div class="form-group">
+                <label>Kategori Aktivitas</label>
+                <select id="inputCategory">
+                    <option value="OT">OT (Overtime / Lembur)</option>
+                    <option value="TN">TN (Travel Normal / Weekday)</option>
+                    <option value="TW">TW (Travel Weekend)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Deskripsi / Lokasi Kegiatan</label>
+                <input type="text" id="inputDesc" placeholder="Misal: Site Sembakung / Dinas Luar">
+            </div>
+            <div class="form-group">
+                <label>Total Jam Kerja / Travel Per Hari (Jam)</label>
+                <input type="number" step="0.5" id="inputHours" value="10.5">
+            </div>
+            <div class="form-group">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                    <input type="checkbox" id="inputFA" checked style="width: auto;"> Dapat Field Allowance (FA: Rp 500.000/hari)
+                </label>
+            </div>
+            <button type="button" class="btn-action btn-primary" onclick="saveRangeActivity()">Simpan Data Aktivitas</button>
+        </div>
 
-    <!-- INPUT RENTANG KERJA & TRAVEL -->
-    <div class="card">
-      <div class="card-header">
-        <h2>Set Rentang Kerja & Travel</h2>
-        <span class="badge badge-amber">Batch Input</span>
-      </div>
+        <div class="calendar-nav" style="margin-top: 20px;">
+            <button onclick="changeOtMonth(-1)" class="btn-icon" style="width:28px;height:28px;font-size:0.8rem;">◀</button>
+            <span id="calMonthTitle">Bulan Tahun</span>
+            <button onclick="changeOtMonth(1)" class="btn-icon" style="width:28px;height:28px;font-size:0.8rem;">▶</button>
+        </div>
 
-      <div class="sub-section">1. Input Rentang Tanggal Kerja</div>
-      <div class="grid-2">
-        <div class="input-group">
-          <label>Tgl Mulai Kerja</label>
-          <input type="number" id="batch_work_start" placeholder="misal: 7" min="1" max="31">
+        <div class="calendar-grid">
+            <div class="cal-header-day">Min</div>
+            <div class="cal-header-day">Sen</div>
+            <div class="cal-header-day">Sel</div>
+            <div class="cal-header-day">Rab</div>
+            <div class="cal-header-day">Kam</div>
+            <div class="cal-header-day">Jum</div>
+            <div class="cal-header-day">Sab</div>
         </div>
-        <div class="input-group">
-          <label>Tgl Selesai Kerja</label>
-          <input type="number" id="batch_work_end" placeholder="misal: 10" min="1" max="31">
-        </div>
-      </div>
-      <div class="grid-2">
-        <div class="input-group">
-          <label>Jam Kerja/Hari</label>
-          <input type="number" id="batch_work_hours" value="8" min="1" max="24">
-        </div>
-        <div class="input-group">
-          <label>Lembur/Hari (Jam)</label>
-          <input type="number" id="batch_overtime_hours" value="0" min="0" max="16">
-        </div>
-      </div>
-      <div class="input-group">
-        <label>Nama Lokasi / Site Kerja</label>
-        <input type="text" id="batch_work_location" placeholder="misal: Site Sembakung, TJB, dll.">
-      </div>
-      <button class="btn-primary" onclick="applyBatchWork()">Terapkan Tanggal Kerja</button>
+        <div class="calendar-grid" id="calendarDaysContainer"></div>
 
-      <div class="sub-section" style="margin-top: 18px;">2. Input Tanggal Travel Khusus</div>
-      <div class="grid-2">
-        <div class="input-group">
-          <label>Tanggal Travel</label>
-          <input type="number" id="batch_travel_date" placeholder="misal: 6" min="1" max="31">
-        </div>
-        <div class="input-group">
-          <label>Jam Travel (Waktu)</label>
-          <input type="number" id="batch_travel_hours" placeholder="misal: 4.5" step="0.5" min="0.5" max="24">
-        </div>
-      </div>
-      <div class="input-group">
-        <label>Nama Lokasi / Tujuan Travel</label>
-        <input type="text" id="batch_travel_location" placeholder="misal: Perjalanan JKT-TJB">
-      </div>
-      <button class="btn-amber" onclick="applyBatchTravel()">Terapkan Tanggal Travel</button>
+        <button type="button" class="btn-action" onclick="clearMonthOtData()" style="background: rgba(248, 113, 113, 0.1); border-color: rgba(248, 113, 113, 0.3); color: #f87171; margin-top: 10px;">🗑️ Hapus Data Lembur Bulan Ini</button>
     </div>
 
-    <!-- KALENDER -->
-    <div class="card">
-      <div class="card-header">
-        <h2>Kalender Absen & Lembur</h2>
-        <span class="badge badge-blue">Depnaker</span>
-      </div>
-
-      <div class="calendar-grid" id="cal_header">
-        <div class="cal-day-header">Min</div>
-        <div class="cal-day-header">Sen</div>
-        <div class="cal-day-header">Sel</div>
-        <div class="cal-day-header">Rab</div>
-        <div class="cal-day-header">Kam</div>
-        <div class="cal-day-header">Jum</div>
-        <div class="cal-day-header">Sab</div>
-      </div>
-      <div class="calendar-grid" id="cal_body"></div>
-
-      <button class="btn-danger-outline" onclick="resetCalendarData()">🔄 Reset All Data Absen Bulan Ini</button>
+    <!-- MODAL POP-UP RINGKASAN HARIAN -->
+    <div id="dayModalOverlay" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <span class="modal-title" id="modalDateTitle">Ringkasan Harian</span>
+                <button onclick="closeModal()" class="btn-icon" style="width:28px;height:28px;font-size:0.8rem;">×</button>
+            </div>
+            <div id="modalDayInfo" style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 16px; color: #cbd5e1;"></div>
+            <div class="form-group">
+                <button type="button" class="btn-action" id="btnToggleHoliday" onclick="toggleHolidayStatus()" style="background: rgba(248, 113, 113, 0.1); border-color: rgba(248, 113, 113, 0.3); color: #f87171;">Ubah Status Tanggal Merah</button>
+            </div>
+        </div>
     </div>
 
-    <!-- PANEL EDIT INDIVIDUAL TANGGAL -->
-    <div class="card" id="date_input_panel">
-      <div class="card-header">
-        <h2 id="selected_date_title">Pilih Tanggal di Kalender</h2>
-      </div>
+    <!-- BOTTOM NAVIGATION BAR (2 TABS) -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="switchTab('tabPersonal', this)">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            Personal
+        </button>
+        <button class="nav-item" onclick="switchTab('tabOtCalc', this)">
+            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+            OT Calc
+        </button>
+    </nav>
 
-      <label class="toggle-red">
-        <input type="checkbox" id="chk_red_day" onchange="toggleRedDay()">
-        <span>Atur Sebagai Tanggal Merah / Libur Nasional</span>
-      </label>
+    <script>
+        let otSelectedMonth = new Date().getMonth();
+        let otSelectedYear = new Date().getFullYear();
+        let modalSelectedDay = null;
 
-      <div class="grid-2">
-        <div class="input-group">
-          <label>Total Jam Kerja (Inc. Lembur)</label>
-          <input type="number" id="day_jam_kerja" value="0" min="0" max="24" oninput="saveDayData()">
-        </div>
-        <div class="input-group">
-          <label>Jam Travel (TN / TW)</label>
-          <input type="number" id="day_jam_travel" value="0" min="0" max="24" oninput="saveDayData()">
-        </div>
-      </div>
+        const monthNames = ["januari", "februari", "maret", "april", "mei", "juni", "juli", "agustus", "september", "oktober", "november", "desember"];
+        const monthNamesCap = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
-      <div class="input-group">
-        <label>Nama Lokasi / Site Tanggal Ini</label>
-        <input type="text" id="day_location" placeholder="misal: Site Sembakung" oninput="saveDayData()">
-      </div>
+        const defaultNationalHolidays = {
+            "2026-0-1": "Tahun Baru Masehi",
+            "2026-1-17": "Isra Mi'raj",
+            "2026-2-17": "Hari Suci Nyepi",
+            "2026-3-3": "Wafat Isa Almasih",
+            "2026-4-1": "Hari Buruh Internasional",
+            "2026-4-13": "Kenaikan Isa Almasih",
+            "2026-4-27": "Idul Adha",
+            "2026-5-15": "Tahun Baru Islam",
+            "2026-7-17": "Hari Kemerdekaan RI",
+            "2026-8-24": "Maulid Nabi SAW",
+            "2026-11-25": "Hari Raya Natal"
+        };
 
-      <div class="calc-res">
-        <div id="day_calc_detail" style="color: var(--text-muted);">Pilih tanggal untuk mengedit.</div>
-        <div style="display: flex; justify-content: space-between; margin-top: 6px; font-weight: 700; font-size: 0.85rem;">
-          <span>Estimasi Tanggal Ini:</span>
-          <span id="day_calc_total" style="color: var(--primary);">Rp 0</span>
-        </div>
-      </div>
-    </div>
+        window.onload = function() {
+            initYearDropdown();
+            setCurrentMonthYear();
+            loadPersonalData();
+            renderCalendar();
+            calculateAll();
+            
+            let todayStr = new Date().toISOString().split('T')[0];
+            document.getElementById('inputStartDate').value = todayStr;
+            document.getElementById('inputEndDate').value = todayStr;
+        }
 
-    <!-- TOTAL SEBULAN -->
-    <div class="card">
-      <div class="card-header">
-        <h2>Akumulasi Bulan Ini</h2>
-      </div>
-      <div class="calc-res" style="margin-top:0;">
-        <div style="display:flex; justify-content:space-between; margin-bottom: 4px;"><span>Total Hari Kerja:</span><b id="acc_work_days">0 Hari</b></div>
-        <div style="display:flex; justify-content:space-between; margin-bottom: 4px;"><span>Total Hari Travel:</span><b id="acc_travel_days">0 Hari</b></div>
-        <hr style="margin: 6px 0; border: 0; border-top: 1px dashed var(--border);">
-        <div style="display:flex; justify-content:space-between; margin-bottom: 4px;"><span>Field Allowance ((Kerja+Travel) x 500rb):</span><b id="acc_field">Rp 0</b></div>
-        <div style="display:flex; justify-content:space-between; margin-bottom: 4px;"><span>Total Lembur:</span><b id="acc_lembur">Rp 0</b></div>
-        <div style="display:flex; justify-content:space-between; margin-bottom: 4px;"><span>Total Travel Normal (TN):</span><b id="acc_tn">Rp 0</b></div>
-        <div style="display:flex; justify-content:space-between;"><span>Total Travel Weekend (TW):</span><b id="acc_tw">Rp 0</b></div>
-      </div>
-    </div>
+        function switchTab(tabId, element) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            if(tabId === 'tabOtCalc') {
+                renderCalendar();
+            }
+        }
 
-  </div>
+        function initYearDropdown() {
+            const yearSelect = document.getElementById('filterYear');
+            yearSelect.innerHTML = '';
+            for(let y = 2026; y <= 2050; y++) {
+                let opt = document.createElement('option');
+                opt.value = y;
+                opt.innerText = y;
+                yearSelect.appendChild(opt);
+            }
+        }
 
-  <!-- TAB 3: EVALUASI & ACTUAL (PLANNING VS ACTUAL) -->
-  <div id="tab3" class="tab-content">
-    
-    <!-- EVALUASI OUTCOME -->
-    <div class="card">
-      <div class="card-header">
-        <h2>Evaluasi Outcome</h2>
-        <span class="badge badge-red">Plan vs Actual</span>
-      </div>
+        function setCurrentMonthYear() {
+            const now = new Date();
+            document.getElementById('filterMonth').value = now.getMonth();
+            document.getElementById('filterYear').value = now.getFullYear();
+            otSelectedMonth = now.getMonth();
+            otSelectedYear = now.getFullYear();
+            updatePayInfoText();
+        }
 
-      <div class="chart-box">
-        <canvas id="chartOutcome"></canvas>
-      </div>
+        function getPeriodKey() {
+            let m = document.getElementById('filterMonth').value;
+            let y = document.getElementById('filterYear').value;
+            return `${y}_${m}`;
+        }
 
-      <div class="calc-res" style="margin-bottom: 12px;">
-        <div style="display:flex; justify-content:space-between; margin-bottom: 4px;"><span>Plan Outcome:</span><b id="val_plan_outcome">Rp 0</b></div>
-        <div style="display:flex; justify-content:space-between; margin-bottom: 4px;"><span>Actual Outcome:</span><b id="val_act_outcome">Rp 0</b></div>
-        <hr style="margin: 6px 0; border: 0; border-top: 1px dashed var(--border);">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <span>Status Track:</span>
-          <span id="status_outcome_badge" class="badge badge-green">On Track</span>
-        </div>
-      </div>
+        function updatePayInfoText() {
+            let mIndex = parseInt(document.getElementById('filterMonth').value);
+            let currentMonthName = monthNames[mIndex];
+            let nextMonthIndex = (mIndex + 1) % 12;
+            let nextMonthName = monthNames[nextMonthIndex];
+            
+            document.getElementById('payInfoText').innerText = `Pendapatan bulan ${currentMonthName} akan dibayar pada bulan ${nextMonthName}`;
+        }
 
-      <button class="btn-secondary-outline" onclick="copyPlanToActualOutcome()">⚡ Samakan Actual dengan Plan Outcome</button>
+        function onPeriodChange() {
+            otSelectedMonth = parseInt(document.getElementById('filterMonth').value);
+            otSelectedYear = parseInt(document.getElementById('filterYear').value);
+            updatePayInfoText();
+            loadPersonalData();
+            renderCalendar();
+            calculateAll();
+        }
 
-      <div class="sub-section">Input Realisasi Outcome (Actual)</div>
-      <div class="grid-2">
-        <div class="input-group"><label>Rumah Tangga</label><input type="text" id="act_out_rt" class="act-out" value="Rp 0" oninput="formatAndCalcActual(this)"></div>
-        <div class="input-group"><label>Ops Kerja</label><input type="text" id="act_out_ops" class="act-out" value="Rp 0" oninput="formatAndCalcActual(this)"></div>
-        <div class="input-group"><label>Listrik Rumah</label><input type="text" id="act_out_listrik" class="act-out" value="Rp 0" oninput="formatAndCalcActual(this)"></div>
-        <div class="input-group"><label>WiFi & Subs</label><input type="text" id="act_out_wifi" class="act-out" value="Rp 0" oninput="formatAndCalcActual(this)"></div>
-        <div class="input-group"><label>Ken's Health</label><input type="text" id="act_out_ken" class="act-out" value="Rp 0" oninput="formatAndCalcActual(this)"></div>
-        <div class="input-group"><label>Orang Tua</label><input type="text" id="act_out_ortu" class="act-out" value="Rp 0" oninput="formatAndCalcActual(this)"></div>
-        <div class="input-group"><label>Credit Card</label><input type="text" id="act_out_cc" class="act-out" value="Rp 0" oninput="formatAndCalcActual(this)"></div>
-        <div class="input-group"><label>Kredivo</label><input type="text" id="act_out_kredivo" class="act-out" value="Rp 0" oninput="formatAndCalcActual(this)"></div>
-        <div class="input-group"><label>Honest</label><input type="text" id="act_out_honest" class="act-out" value="Rp 0" oninput="formatAndCalcActual(this)"></div>
-        <div class="input-group"><label>Pribadi</label><input type="text" id="act_out_pribadi" class="act-out" value="Rp 0" oninput="formatAndCalcActual(this)"></div>
-        <div class="input-group"><label>Other</label><input type="text" id="act_out_other" class="act-out" value="Rp 0" oninput="formatAndCalcActual(this)"></div>
-      </div>
-    </div>
+        /* --- FORMATTER ANGKA DENGAN TITIK --- */
+        function formatNumberInput(input) {
+            let val = input.value.replace(/\D/g, '');
+            if(val !== '') {
+                input.value = parseInt(val).toLocaleString('id-ID');
+            } else {
+                input.value = '';
+            }
+        }
 
-    <!-- EVALUASI INVESTASI -->
-    <div class="card">
-      <div class="card-header">
-        <h2>Evaluasi Investasi</h2>
-        <span class="badge badge-green">Plan vs Actual</span>
-      </div>
+        function getCleanNumber(elementId) {
+            let val = document.getElementById(elementId).value;
+            if(!val) return 0;
+            return parseFloat(val.toString().replace(/\./g, '')) || 0;
+        }
 
-      <div class="chart-box">
-        <canvas id="chartInvestasi"></canvas>
-      </div>
+        function getCleanNumberFromEl(inputEl) {
+            let val = inputEl.value;
+            if(!val) return 0;
+            return parseFloat(val.toString().replace(/\./g, '')) || 0;
+        }
 
-      <div class="calc-res" style="margin-bottom: 12px;">
-        <div style="display:flex; justify-content:space-between; margin-bottom: 4px;"><span>Plan Investasi:</span><b id="val_plan_inv">Rp 0</b></div>
-        <div style="display:flex; justify-content:space-between; margin-bottom: 4px;"><span>Actual Investasi:</span><b id="val_act_inv">Rp 0</b></div>
-        <hr style="margin: 6px 0; border: 0; border-top: 1px dashed var(--border);">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <span>Status Track:</span>
-          <span id="status_inv_badge" class="badge badge-green">On Track</span>
-        </div>
-      </div>
+        /* --- PERSONAL TAB --- */
+        function addOutcomeRow(name = '', amount = '') {
+            const container = document.getElementById('outcomeContainer');
+            const div = document.createElement('div');
+            div.className = 'dynamic-row';
+            
+            let formattedAmount = '';
+            if(amount !== '' && !isNaN(amount)) {
+                formattedAmount = parseInt(amount).toLocaleString('id-ID');
+            }
 
-      <button class="btn-secondary-outline" onclick="copyPlanToActualInv()">⚡ Samakan Actual dengan Plan Investasi</button>
+            div.innerHTML = `
+                <input type="text" placeholder="Nama Pengeluaran" class="out-name" value="${name}" oninput="autoSavePersonalData(); calculateAll();">
+                <input type="text" placeholder="Nominal Rp" class="out-val" value="${formattedAmount}" oninput="formatNumberInput(this); autoSavePersonalData(); calculateAll();">
+                <button type="button" class="btn-icon" onclick="this.parentElement.remove(); autoSavePersonalData(); calculateAll();">×</button>
+            `;
+            container.appendChild(div);
+        }
 
-      <div class="sub-section">Input Realisasi Investasi (Actual)</div>
-      <div class="grid-2">
-        <div class="input-group"><label>Emergency (10%)</label><input type="text" id="act_inv_emergency" class="act-inv" value="Rp 0" oninput="formatAndCalcActual(this)"></div>
-        <div class="input-group"><label>Education (10%)</label><input type="text" id="act_inv_education" class="act-inv" value="Rp 0" oninput="formatAndCalcActual(this)"></div>
-        <div class="input-group"><label>Emas (10%)</label><input type="text" id="act_inv_emas" class="act-inv" value="Rp 0" oninput="formatAndCalcActual(this)"></div>
-        <div class="input-group"><label>Saham (10%)</label><input type="text" id="act_inv_saham" class="act-inv" value="Rp 0" oninput="formatAndCalcActual(this)"></div>
-        <div class="input-group"><label>Liburan (40%)</label><input type="text" id="act_inv_liburan" class="act-inv" value="Rp 0" oninput="formatAndCalcActual(this)"></div>
-        <div class="input-group"><label>Self Reward (20%)</label><input type="text" id="act_inv_reward" class="act-inv" value="Rp 0" oninput="formatAndCalcActual(this)"></div>
-      </div>
+        function loadPersonalData() {
+            let period = getPeriodKey();
+            document.getElementById('outcomeContainer').innerHTML = '';
+            let savedData = localStorage.getItem('finpulse_personal_' + period) || getLatestSavedPersonalData();
+            if(savedData) {
+                try {
+                    let data = typeof savedData === 'string' ? JSON.parse(savedData) : savedData;
+                    
+                    document.getElementById('baseSalary').value = data.baseSalary ? parseInt(data.baseSalary).toLocaleString('id-ID') : '';
+                    document.getElementById('allowance').value = data.allowance ? parseInt(data.allowance).toLocaleString('id-ID') : '';
+                    document.getElementById('bonus').value = data.bonus ? parseInt(data.bonus).toLocaleString('id-ID') : '';
+                    
+                    if(data.outcomes && data.outcomes.length > 0) {
+                        data.outcomes.forEach(item => addOutcomeRow(item.name, item.val));
+                    } else {
+                        resetDefaultOutcomes();
+                    }
+                } catch(e) { resetDefaultOutcomes(); }
+            } else { resetDefaultOutcomes(); }
+        }
 
-      <button class="btn-danger-outline" onclick="resetEvaluasiData()">🔄 Reset All Data Evaluasi Bulan Ini</button>
-    </div>
+        function getLatestSavedPersonalData() {
+            for(let i = 0; i < localStorage.length; i++) {
+                let key = localStorage.key(i);
+                if(key && key.startsWith('finpulse_personal_')) return localStorage.getItem(key);
+            }
+            return null;
+        }
 
-  </div>
+        function resetDefaultOutcomes() {
+            addOutcomeRow('Investasi Rutin', '');
+            addOutcomeRow('Pengeluaran Rumah Tangga', '');
+        }
 
-  <!-- BOTTOM NAVIGATION BAR -->
-  <nav class="bottom-nav">
-    <button class="nav-btn active" id="btn_nav_tab1">
-      <span class="nav-icon">📊</span>
-      <span>Resume</span>
-    </button>
-    <button class="nav-btn" id="btn_nav_tab2">
-      <span class="nav-icon">⏱️</span>
-      <span>Kalkulator</span>
-    </button>
-    <button class="nav-btn" id="btn_nav_tab3">
-      <span class="nav-icon">📈</span>
-      <span>Evaluasi</span>
-    </button>
-  </nav>
-
-  <script>
-    let selectedDate = null;
-    let monthlyCalendarData = {};
-    let chartOutcomeInstance = null;
-    let chartInvestasiInstance = null;
-
-    const monthNames = [
-      "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-      "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-    ];
-
-    const inputIds = [
-      'in_gaji', 'in_transport', 'in_bonus', 'in_field', 'in_lembur', 'in_tn', 'in_tw',
-      'out_rt', 'out_ops', 'out_listrik', 'out_wifi', 'out_ken', 'out_ortu',
-      'out_cc', 'out_kredivo', 'out_honest', 'out_pribadi', 'out_other',
-      'act_out_rt', 'act_out_ops', 'act_out_listrik', 'act_out_wifi', 'act_out_ken', 'act_out_ortu',
-      'act_out_cc', 'act_out_kredivo', 'act_out_honest', 'act_out_pribadi', 'act_out_other',
-      'act_inv_emergency', 'act_inv_education', 'act_inv_emas', 'act_inv_saham', 'act_inv_liburan', 'act_inv_reward'
-    ];
-
-    function formatRp(val) {
-      if (isNaN(val) || val === null) val = 0;
-      return "Rp " + Math.round(val).toLocaleString("id-ID");
-    }
-
-    function parseRp(str) {
-      if (!str) return 0;
-      const clean = str.toString().replace(/[^0-9]/g, '');
-      return Number(clean) || 0;
-    }
-
-    function formatAndCalc(inputEl) {
-      const num = parseRp(inputEl.value);
-      inputEl.value = num > 0 ? formatRp(num) : "Rp 0";
-      calculateAll();
-      saveData();
-    }
-
-    function formatAndCalcActual(inputEl) {
-      const num = parseRp(inputEl.value);
-      inputEl.value = num > 0 ? formatRp(num) : "Rp 0";
-      updateChartsAndEvaluation();
-      saveData();
-    }
-
-    function onGajiChange(inputEl) {
-      formatAndCalc(inputEl);
-      calculateMonthlyOvertime();
-    }
-
-    function initYearOptions() {
-      const yearSelect = document.getElementById('sel_tahun');
-      yearSelect.innerHTML = '';
-      for (let y = 2024; y <= 2050; y++) {
-        const opt = document.createElement('option');
-        opt.value = y;
-        opt.textContent = y;
-        yearSelect.appendChild(opt);
-      }
-    }
-
-    function initDragScroll() {
-      const slider = document.getElementById('inv_carousel');
-      let isDown = false, startX, scrollLeft;
-
-      slider.addEventListener('mousedown', (e) => {
-        isDown = true;
-        startX = e.pageX - slider.offsetLeft;
-        scrollLeft = slider.scrollLeft;
-      });
-      slider.addEventListener('mouseleave', () => { isDown = false; });
-      slider.addEventListener('mouseup', () => { isDown = false; });
-      slider.addEventListener('mousemove', (e) => {
-        if(!isDown) return;
-        e.preventDefault();
-        const x = e.pageX - slider.offsetLeft;
-        slider.scrollLeft = scrollLeft - (x - startX) * 2;
-      });
-    }
-
-    function switchTab(tabId, btn) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-      
-      document.getElementById(tabId).classList.add('active');
-      btn.classList.add('active');
-
-      if (tabId === 'tab3') {
-        updateChartsAndEvaluation();
-      }
-    }
-
-    function getStorageKey() {
-      const b = document.getElementById('sel_bulan').value;
-      const t = document.getElementById('sel_tahun').value;
-      return `money_app_${t}_${b}`;
-    }
-
-    function updatePayrollNotice() {
-      const b = parseInt(document.getElementById('sel_bulan').value);
-      const t = parseInt(document.getElementById('sel_tahun').value);
-
-      let nextMonthIdx = b;
-      let nextYear = t;
-
-      if (nextMonthIdx > 11) {
-        nextMonthIdx = 0;
-        nextYear += 1;
-      }
-
-      const nextMonthName = monthNames[nextMonthIdx];
-      document.getElementById('payroll_notice_text').innerText = 
-        `Income tersebut akan diterima pada ${nextMonthName} ${nextYear}`;
-    }
-
-    function saveData() {
-      const key = getStorageKey();
-      const data = {
-        inputs: {},
-        calendar: monthlyCalendarData
-      };
-      inputIds.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) data.inputs[id] = el.value;
-      });
-      try {
-        localStorage.setItem(key, JSON.stringify(data));
-      } catch(e) {
-        console.warn("LocalStorage tidak tersedia/terblokir.");
-      }
-    }
-
-    function loadData() {
-      monthlyCalendarData = {};
-      selectedDate = null;
-
-      inputIds.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = "Rp 0";
-      });
-
-      // Reset batch inputs
-      if (document.getElementById('batch_work_start')) document.getElementById('batch_work_start').value = '';
-      if (document.getElementById('batch_work_end')) document.getElementById('batch_work_end').value = '';
-      if (document.getElementById('batch_work_location')) document.getElementById('batch_work_location').value = '';
-      if (document.getElementById('batch_travel_date')) document.getElementById('batch_travel_date').value = '';
-      if (document.getElementById('batch_travel_hours')) document.getElementById('batch_travel_hours').value = '';
-      if (document.getElementById('batch_travel_location')) document.getElementById('batch_travel_location').value = '';
-
-      const key = getStorageKey();
-      let saved = null;
-      try {
-        saved = localStorage.getItem(key);
-      } catch(e) {
-        console.warn("LocalStorage tidak dapat diakses.");
-      }
-
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          if (parsed.inputs) {
-            inputIds.forEach(id => {
-              if (parsed.inputs[id] !== undefined) {
-                const rawVal = parseRp(parsed.inputs[id]);
-                const el = document.getElementById(id);
-                if (el) el.value = rawVal > 0 ? formatRp(rawVal) : "Rp 0";
-              }
+        function autoSavePersonalData() {
+            let period = getPeriodKey();
+            let baseSalary = getCleanNumber('baseSalary');
+            let allowance = getCleanNumber('allowance');
+            let bonus = getCleanNumber('bonus');
+            let outcomes = [];
+            document.querySelectorAll('#tabPersonal .dynamic-row').forEach(row => {
+                let name = row.querySelector('.out-name').value;
+                let valInput = row.querySelector('.out-val');
+                let val = getCleanNumberFromEl(valInput);
+                if(name || val > 0) outcomes.push({ name, val });
             });
-          }
-          monthlyCalendarData = parsed.calendar || {};
-        } catch(e) {
-          console.error("Error parsing localStorage data", e);
-        }
-      }
-
-      updatePayrollNotice();
-      renderCalendar();
-      calculateMonthlyOvertime();
-      updateChartsAndEvaluation();
-    }
-
-    /* FUNGSI RESET */
-    function resetResumeData() {
-      const bName = monthNames[parseInt(document.getElementById('sel_bulan').value) - 1];
-      const tNum = document.getElementById('sel_tahun').value;
-
-      if (confirm(`Apakah Anda yakin ingin menghapus seluruh data Pemasukan & Outcome Planning pada Tab Resume untuk bulan ${bName} ${tNum}?`)) {
-        const resumeIds = [
-          'in_gaji', 'in_transport', 'in_bonus',
-          'out_rt', 'out_ops', 'out_listrik', 'out_wifi', 'out_ken', 'out_ortu',
-          'out_cc', 'out_kredivo', 'out_honest', 'out_pribadi', 'out_other'
-        ];
-        resumeIds.forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el.value = "Rp 0";
-        });
-
-        calculateMonthlyOvertime();
-        saveData();
-      }
-    }
-
-    function resetEvaluasiData() {
-      const bName = monthNames[parseInt(document.getElementById('sel_bulan').value) - 1];
-      const tNum = document.getElementById('sel_tahun').value;
-
-      if (confirm(`Apakah Anda yakin ingin menghapus seluruh data Realisasi (Actual Outcome & Investasi) pada Tab Evaluasi untuk bulan ${bName} ${tNum}?`)) {
-        const evaluasiIds = [
-          'act_out_rt', 'act_out_ops', 'act_out_listrik', 'act_out_wifi', 'act_out_ken', 'act_out_ortu',
-          'act_out_cc', 'act_out_kredivo', 'act_out_honest', 'act_out_pribadi', 'act_out_other',
-          'act_inv_emergency', 'act_inv_education', 'act_inv_emas', 'act_inv_saham', 'act_inv_liburan', 'act_inv_reward'
-        ];
-        evaluasiIds.forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el.value = "Rp 0";
-        });
-
-        updateChartsAndEvaluation();
-        saveData();
-      }
-    }
-
-    function resetCalendarData() {
-      const bName = monthNames[parseInt(document.getElementById('sel_bulan').value) - 1];
-      const tNum = document.getElementById('sel_tahun').value;
-
-      if (confirm(`Apakah Anda yakin ingin menghapus seluruh data absen, jam & lokasi untuk bulan ${bName} ${tNum}?`)) {
-        monthlyCalendarData = {};
-        
-        document.getElementById('batch_work_start').value = '';
-        document.getElementById('batch_work_end').value = '';
-        document.getElementById('batch_work_location').value = '';
-        document.getElementById('batch_travel_date').value = '';
-        document.getElementById('batch_travel_hours').value = '';
-        document.getElementById('batch_travel_location').value = '';
-
-        document.getElementById('day_jam_kerja').value = 0;
-        document.getElementById('day_jam_travel').value = 0;
-        document.getElementById('day_location').value = '';
-        document.getElementById('chk_red_day').checked = false;
-
-        renderCalendar();
-        calculateMonthlyOvertime();
-        saveData();
-      }
-    }
-
-    function onPeriodChange() {
-      loadData();
-    }
-
-    function renderCalendar() {
-      const month = parseInt(document.getElementById('sel_bulan').value);
-      const year = parseInt(document.getElementById('sel_tahun').value);
-      const calBody = document.getElementById('cal_body');
-      calBody.innerHTML = '';
-
-      const firstDay = new Date(year, month - 1, 1).getDay();
-      const daysInMonth = new Date(year, month, 0).getDate();
-
-      for (let i = 0; i < firstDay; i++) {
-        const emptyDiv = document.createElement('div');
-        emptyDiv.className = 'cal-date empty';
-        calBody.appendChild(emptyDiv);
-      }
-
-      for (let d = 1; d <= daysInMonth; d++) {
-        const dateObj = new Date(year, month - 1, d);
-        const dayOfWeek = dateObj.getDay();
-        const dayData = monthlyCalendarData[d] || { kerja: 0, travel: 0, isRed: false, location: '' };
-
-        const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
-        const isRedDay = isWeekend || dayData.isRed;
-
-        const dateDiv = document.createElement('div');
-        let classNames = ['cal-date'];
-        if (isRedDay) classNames.push('red-day');
-        if (selectedDate === d) classNames.push('selected');
-        
-        dateDiv.className = classNames.join(' ');
-        
-        let badgesHtml = '';
-        if (dayData.location && dayData.location.trim() !== '') {
-          badgesHtml += `<span class="cal-badge badge-location" title="${dayData.location}">📍 ${dayData.location}</span>`;
-        }
-        if (dayData.kerja > 0) {
-          badgesHtml += `<span class="cal-badge badge-work-day">${dayData.kerja}h</span>`;
-        }
-        if (dayData.travel > 0) {
-          badgesHtml += `<span class="cal-badge badge-travel-day">${dayData.travel}h</span>`;
+            localStorage.setItem('finpulse_personal_' + period, JSON.stringify({ baseSalary, allowance, bonus, outcomes }));
         }
 
-        dateDiv.innerHTML = `<span>${d}</span>${badgesHtml}`;
 
-        dateDiv.onclick = () => selectDate(d, isWeekend);
-        calBody.appendChild(dateDiv);
-      }
-
-      if (!selectedDate && daysInMonth > 0) {
-        selectDate(1, new Date(year, month - 1, 1).getDay() === 0 || new Date(year, month - 1, 1).getDay() === 6);
-      }
-    }
-
-    function selectDate(d, isWeekend) {
-      selectedDate = d;
-      const monthStr = monthNames[parseInt(document.getElementById('sel_bulan').value) - 1];
-      const yearStr = document.getElementById('sel_tahun').value;
-
-      document.getElementById('selected_date_title').innerText = `${d} ${monthStr} ${yearStr}`;
-
-      const dayData = monthlyCalendarData[d] || { kerja: 0, travel: 0, isRed: false, location: '' };
-      document.getElementById('day_jam_kerja').value = dayData.kerja || 0;
-      document.getElementById('day_jam_travel').value = dayData.travel || 0;
-      document.getElementById('day_location').value = dayData.location || '';
-      document.getElementById('chk_red_day').checked = dayData.isRed || isWeekend;
-
-      renderCalendar();
-      updateSingleDayCalc();
-    }
-
-    function applyBatchWork() {
-      const start = parseInt(document.getElementById('batch_work_start').value);
-      const end = parseInt(document.getElementById('batch_work_end').value);
-      const baseHours = parseFloat(document.getElementById('batch_work_hours').value) || 0;
-      const otHours = parseFloat(document.getElementById('batch_overtime_hours').value) || 0;
-      const location = document.getElementById('batch_work_location').value.trim();
-
-      const month = parseInt(document.getElementById('sel_bulan').value);
-      const year = parseInt(document.getElementById('sel_tahun').value);
-      const daysInMonth = new Date(year, month, 0).getDate();
-
-      if (start && end && start <= end && start >= 1 && end <= daysInMonth) {
-        const totalDayHours = baseHours + otHours;
-        for (let d = start; d <= end; d++) {
-          if (!monthlyCalendarData[d]) monthlyCalendarData[d] = { kerja: 0, travel: 0, isRed: false, location: '' };
-          monthlyCalendarData[d].kerja = totalDayHours;
-          if (location !== '') {
-            monthlyCalendarData[d].location = location;
-          }
+        /* --- OT CALC & CALENDAR --- */
+        function changeOtMonth(direction) {
+            otSelectedMonth += direction;
+            if(otSelectedMonth > 11) { otSelectedMonth = 0; otSelectedYear++; }
+            else if(otSelectedMonth < 0) { otSelectedMonth = 11; otSelectedYear--; }
+            document.getElementById('filterMonth').value = otSelectedMonth;
+            document.getElementById('filterYear').value = otSelectedYear;
+            updatePayInfoText();
+            loadPersonalData();
+            renderCalendar();
+            calculateAll();
         }
-        renderCalendar();
-        calculateMonthlyOvertime();
-        saveData();
-        alert(`Berhasil mengatur tanggal kerja dari ${start} s/d ${end}${location ? ' di ' + location : ''}!`);
-      } else {
-        alert(`Masukkan rentang tanggal yang valid (1 - ${daysInMonth})!`);
-      }
-    }
 
-    function applyBatchTravel() {
-      const date = parseInt(document.getElementById('batch_travel_date').value);
-      const travelHours = parseFloat(document.getElementById('batch_travel_hours').value) || 0;
-      const location = document.getElementById('batch_travel_location').value.trim();
-
-      const month = parseInt(document.getElementById('sel_bulan').value);
-      const year = parseInt(document.getElementById('sel_tahun').value);
-      const daysInMonth = new Date(year, month, 0).getDate();
-
-      if (date && travelHours > 0 && date >= 1 && date <= daysInMonth) {
-        if (!monthlyCalendarData[date]) monthlyCalendarData[date] = { kerja: 0, travel: 0, isRed: false, location: '' };
-        monthlyCalendarData[date].travel = travelHours;
-        if (location !== '') {
-          monthlyCalendarData[date].location = location;
+        function getCustomHolidays() {
+            return JSON.parse(localStorage.getItem('finpulse_holidays')) || defaultNationalHolidays;
         }
-        
-        renderCalendar();
-        calculateMonthlyOvertime();
-        saveData();
-        alert(`Berhasil menambahkan travel ${travelHours} jam pada tanggal ${date}${location ? ' (' + location + ')' : ''}!`);
-      } else {
-        alert('Masukkan tanggal dan jam travel yang valid!');
-      }
-    }
 
-    function toggleRedDay() {
-      if (!selectedDate) return;
-      if (!monthlyCalendarData[selectedDate]) monthlyCalendarData[selectedDate] = { kerja: 0, travel: 0, isRed: false, location: '' };
-      
-      monthlyCalendarData[selectedDate].isRed = document.getElementById('chk_red_day').checked;
-      renderCalendar();
-      updateSingleDayCalc();
-      calculateMonthlyOvertime();
-      saveData();
-    }
+        function renderCalendar() {
+            document.getElementById('calMonthTitle').innerText = `${monthNamesCap[otSelectedMonth]} ${otSelectedYear}`;
+            const container = document.getElementById('calendarDaysContainer');
+            container.innerHTML = '';
 
-    function saveDayData() {
-      if (!selectedDate) return;
-      const kerja = parseFloat(document.getElementById('day_jam_kerja').value) || 0;
-      const travel = parseFloat(document.getElementById('day_jam_travel').value) || 0;
-      const location = document.getElementById('day_location').value.trim();
+            const firstDayIndex = new Date(otSelectedYear, otSelectedMonth, 1).getDay();
+            const totalDays = new Date(otSelectedYear, otSelectedMonth + 1, 0).getDate();
+            let period = `${otSelectedYear}_${otSelectedMonth}`;
+            let monthData = JSON.parse(localStorage.getItem('finpulse_ot_cal_' + period)) || {};
+            let customHolidays = getCustomHolidays();
 
-      if (!monthlyCalendarData[selectedDate]) {
-        monthlyCalendarData[selectedDate] = { kerja: 0, travel: 0, isRed: false, location: '' };
-      }
-
-      monthlyCalendarData[selectedDate].kerja = kerja;
-      monthlyCalendarData[selectedDate].travel = travel;
-      monthlyCalendarData[selectedDate].location = location;
-
-      renderCalendar();
-      updateSingleDayCalc();
-      calculateMonthlyOvertime();
-      saveData();
-    }
-
-    function calculateSingleDay(gaji, dayNum, dayData) {
-      if (gaji <= 0) return { lembur: 0, travel: 0, total: 0, type: 'weekday' };
-
-      const month = parseInt(document.getElementById('sel_bulan').value);
-      const year = parseInt(document.getElementById('sel_tahun').value);
-      const dateObj = new Date(year, month - 1, dayNum);
-      const dayOfWeek = dateObj.getDay();
-      
-      const isRedDay = (dayOfWeek === 0 || dayOfWeek === 6) || dayData.isRed;
-      const upahSejam = gaji / 173;
-
-      let jamKerja = dayData.kerja || 0;
-      let jamTravel = dayData.travel || 0;
-
-      let potongIstirahat = (jamKerja >= 5) ? 1 : 0;
-      let jamKerjaEfektif = Math.max(0, jamKerja - potongIstirahat);
-
-      let multiplierLemburSum = 0;
-      let multiplierTravel = 0;
-
-      if (!isRedDay) { 
-        let jamLemburBersih = Math.max(0, jamKerjaEfektif - 8);
-        if (jamLemburBersih > 0) {
-          if (jamLemburBersih >= 1) {
-            multiplierLemburSum += 1.5 + ((jamLemburBersih - 1) * 2);
-          } else {
-            multiplierLemburSum += jamLemburBersih * 1.5;
-          }
-        }
-        multiplierTravel = jamTravel * 1.0;
-      } else { 
-        let jamLemburBersih = jamKerjaEfektif;
-        if (jamLemburBersih > 0) {
-          if (jamLemburBersih <= 8) {
-            multiplierLemburSum = jamLemburBersih * 2;
-          } else if (jamLemburBersih === 9) {
-            multiplierLemburSum = (8 * 2) + 3;
-          } else {
-            multiplierLemburSum = (8 * 2) + 3 + ((jamLemburBersih - 9) * 4);
-          }
-        }
-        multiplierTravel = jamTravel * 1.5;
-      }
-
-      const valLembur = multiplierLemburSum * upahSejam;
-      const valTravel = multiplierTravel * upahSejam;
-
-      return {
-        lembur: valLembur,
-        travel: valTravel,
-        total: valLembur + valTravel,
-        type: isRedDay ? 'weekend' : 'weekday'
-      };
-    }
-
-    function updateSingleDayCalc() {
-      if (!selectedDate) return;
-      const gaji = parseRp(document.getElementById('in_gaji').value);
-      const dayData = monthlyCalendarData[selectedDate] || { kerja: 0, travel: 0, isRed: false, location: '' };
-
-      const res = calculateSingleDay(gaji, selectedDate, dayData);
-
-      const locText = dayData.location ? ` | Lokasi: <b>${dayData.location}</b>` : '';
-
-      document.getElementById('day_calc_detail').innerHTML = `
-        Gaji Basis/Jam: <b>${formatRp(gaji / 173)}</b><br>
-        Tipe: <b>${res.type === 'weekend' ? 'Libur / Red Day' : 'Hari Kerja'}</b>${locText}<br>
-        Lembur: <b>${formatRp(res.lembur)}</b> | Travel: <b>${formatRp(res.travel)}</b>
-      `;
-      document.getElementById('day_calc_total').innerText = formatRp(res.total);
-    }
-
-    function calculateMonthlyOvertime() {
-      const gaji = parseRp(document.getElementById('in_gaji').value);
-      let totalLembur = 0;
-      let totalTN = 0;
-      let totalTW = 0;
-      let workDaysCount = 0;
-      let travelDaysCount = 0;
-
-      for (let d in monthlyCalendarData) {
-        const item = monthlyCalendarData[d];
-        if (item.kerja > 0) workDaysCount++;
-        if (item.travel > 0) travelDaysCount++;
-
-        const res = calculateSingleDay(gaji, parseInt(d), item);
-        totalLembur += res.lembur;
-        if (res.type === 'weekday') {
-          totalTN += res.travel;
-        } else {
-          totalTW += res.travel;
-        }
-      }
-
-      const totalFieldAllowance = (workDaysCount + travelDaysCount) * 500000;
-
-      document.getElementById('in_field').value = formatRp(totalFieldAllowance);
-      document.getElementById('in_lembur').value = formatRp(totalLembur);
-      document.getElementById('in_tn').value = formatRp(totalTN);
-      document.getElementById('in_tw').value = formatRp(totalTW);
-
-      document.getElementById('acc_work_days').innerText = `${workDaysCount} Hari`;
-      document.getElementById('acc_travel_days').innerText = `${travelDaysCount} Hari`;
-      document.getElementById('acc_field').innerText = formatRp(totalFieldAllowance);
-      document.getElementById('acc_lembur').innerText = formatRp(totalLembur);
-      document.getElementById('acc_tn').innerText = formatRp(totalTN);
-      document.getElementById('acc_tw').innerText = formatRp(totalTW);
-
-      calculateAll();
-    }
-
-    function calculateAll() {
-      const gaji = parseRp(document.getElementById('in_gaji').value);
-      const transport = parseRp(document.getElementById('in_transport').value);
-      const bonus = parseRp(document.getElementById('in_bonus').value);
-      const field = parseRp(document.getElementById('in_field').value);
-      
-      const lembur = parseRp(document.getElementById('in_lembur').value);
-      const tn = parseRp(document.getElementById('in_tn').value);
-      const tw = parseRp(document.getElementById('in_tw').value);
-
-      const totalIncome = gaji + transport + bonus + field + lembur + tn + tw;
-
-      let totalOutcome = 0;
-      document.querySelectorAll('.out-fixed, .out-debt').forEach(input => {
-        totalOutcome += parseRp(input.value);
-      });
-
-      const sisaSebelumInvestasi = totalIncome - totalOutcome;
-      const baseAlokasi = sisaSebelumInvestasi > 0 ? sisaSebelumInvestasi : 0;
-
-      const invEmergency = baseAlokasi * 0.10;
-      const invEducation = baseAlokasi * 0.10;
-      const invEmas = baseAlokasi * 0.10;
-      const invSaham = baseAlokasi * 0.10;
-      const invLiburan = baseAlokasi * 0.40;
-      const invReward = baseAlokasi * 0.20;
-
-      document.getElementById('inv_emergency').innerText = formatRp(invEmergency);
-      document.getElementById('inv_education').innerText = formatRp(invEducation);
-      document.getElementById('inv_emas').innerText = formatRp(invEmas);
-      document.getElementById('inv_saham').innerText = formatRp(invSaham);
-      document.getElementById('inv_liburan').innerText = formatRp(invLiburan);
-      document.getElementById('inv_reward').innerText = formatRp(invReward);
-
-      document.getElementById('res_income').innerText = formatRp(totalIncome);
-      document.getElementById('res_outcome').innerText = formatRp(totalOutcome);
-
-      updateChartsAndEvaluation();
-    }
-
-    /* AKSI COPY DAN SALIN PLAN KE ACTUAL */
-    function copyPlanToActualOutcome() {
-      const mapping = [
-        ['out_rt', 'act_out_rt'], ['out_ops', 'act_out_ops'], ['out_listrik', 'act_out_listrik'],
-        ['out_wifi', 'act_out_wifi'], ['out_ken', 'act_out_ken'], ['out_ortu', 'act_out_ortu'],
-        ['out_cc', 'act_out_cc'], ['out_kredivo', 'act_out_kredivo'], ['out_honest', 'act_out_honest'],
-        ['out_pribadi', 'act_out_pribadi'], ['out_other', 'act_out_other']
-      ];
-
-      mapping.forEach(([planId, actId]) => {
-        document.getElementById(actId).value = document.getElementById(planId).value;
-      });
-
-      updateChartsAndEvaluation();
-      saveData();
-    }
-
-    function copyPlanToActualInv() {
-      document.getElementById('act_inv_emergency').value = document.getElementById('inv_emergency').innerText;
-      document.getElementById('act_inv_education').value = document.getElementById('inv_education').innerText;
-      document.getElementById('act_inv_emas').value = document.getElementById('inv_emas').innerText;
-      document.getElementById('act_inv_saham').value = document.getElementById('inv_saham').innerText;
-      document.getElementById('act_inv_liburan').value = document.getElementById('inv_liburan').innerText;
-      document.getElementById('act_inv_reward').value = document.getElementById('inv_reward').innerText;
-
-      updateChartsAndEvaluation();
-      saveData();
-    }
-
-    /* CHART & EVALUASI LOGIC */
-    function updateChartsAndEvaluation() {
-      // 1. OUTCOME
-      let planOutcome = 0;
-      document.querySelectorAll('.out-fixed, .out-debt').forEach(i => planOutcome += parseRp(i.value));
-      
-      let actOutcome = 0;
-      document.querySelectorAll('.act-out').forEach(i => actOutcome += parseRp(i.value));
-
-      document.getElementById('val_plan_outcome').innerText = formatRp(planOutcome);
-      document.getElementById('val_act_outcome').innerText = formatRp(actOutcome);
-
-      const badgeOut = document.getElementById('status_outcome_badge');
-      if (actOutcome <= planOutcome) {
-        badgeOut.className = "badge badge-green";
-        badgeOut.innerText = "On Track (<= Plan)";
-      } else {
-        const over = actOutcome - planOutcome;
-        badgeOut.className = "badge badge-red";
-        badgeOut.innerText = `Over Budget (+${formatRp(over)})`;
-      }
-
-      // 2. INVESTASI
-      const planInv = parseRp(document.getElementById('inv_emergency').innerText) +
-                      parseRp(document.getElementById('inv_education').innerText) +
-                      parseRp(document.getElementById('inv_emas').innerText) +
-                      parseRp(document.getElementById('inv_saham').innerText) +
-                      parseRp(document.getElementById('inv_liburan').innerText) +
-                      parseRp(document.getElementById('inv_reward').innerText);
-
-      let actInv = 0;
-      document.querySelectorAll('.act-inv').forEach(i => actInv += parseRp(i.value));
-
-      document.getElementById('val_plan_inv').innerText = formatRp(planInv);
-      document.getElementById('val_act_inv').innerText = formatRp(actInv);
-
-      const badgeInv = document.getElementById('status_inv_badge');
-      if (actInv >= planInv) {
-        badgeInv.className = "badge badge-green";
-        badgeInv.innerText = "On Track (>= Plan)";
-      } else {
-        const dev = planInv - actInv;
-        badgeInv.className = "badge badge-amber";
-        badgeInv.innerText = `Under Target (-${formatRp(dev)})`;
-      }
-
-      // RENDER PIE CHARTS
-      renderPieCharts(planOutcome, actOutcome, planInv, actInv);
-    }
-
-    function renderPieCharts(planOutcome, actOutcome, planInv, actInv) {
-      if (typeof Chart === 'undefined') return;
-
-      // Chart Outcome
-      const ctxOut = document.getElementById('chartOutcome');
-      if (ctxOut) {
-        if (chartOutcomeInstance) chartOutcomeInstance.destroy();
-        chartOutcomeInstance = new Chart(ctxOut, {
-          type: 'pie',
-          data: {
-            labels: ['Plan Outcome', 'Actual Outcome'],
-            datasets: [{
-              data: [planOutcome, actOutcome],
-              backgroundColor: ['#4f46e5', '#ef4444']
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: { position: 'bottom' }
+            for(let i = 0; i < firstDayIndex; i++) {
+                let emptyDiv = document.createElement('div');
+                emptyDiv.className = 'cal-day empty';
+                container.appendChild(emptyDiv);
             }
-          }
-        });
-      }
 
-      // Chart Investasi
-      const ctxInv = document.getElementById('chartInvestasi');
-      if (ctxInv) {
-        if (chartInvestasiInstance) chartInvestasiInstance.destroy();
-        chartInvestasiInstance = new Chart(ctxInv, {
-          type: 'pie',
-          data: {
-            labels: ['Plan Investasi', 'Actual Investasi'],
-            datasets: [{
-              data: [planInv, actInv],
-              backgroundColor: ['#3b82f6', '#10b981']
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: { position: 'bottom' }
+            for(let day = 1; day <= totalDays; day++) {
+                let dayDiv = document.createElement('div');
+                let dateObj = new Date(otSelectedYear, otSelectedMonth, day);
+                let dayOfWeek = dateObj.getDay();
+                let isSunday = (dayOfWeek === 0 || dayOfWeek === 6);
+                let holidayKey = `${otSelectedYear}-${otSelectedMonth}-${day}`;
+                let isHoliday = customHolidays[holidayKey] !== undefined;
+
+                let dayData = monthData[day] || null;
+                let dayClass = 'cal-day';
+                if(isSunday) dayClass += ' sunday';
+                if(isHoliday) dayClass += ' holiday';
+
+                dayDiv.className = dayClass;
+                dayDiv.onclick = () => openDayModal(day);
+
+                let breakdown = calculateDetailedDayIncome(dayData, isSunday || isHoliday);
+                let descText = dayData && dayData.desc ? dayData.desc : (dayData ? dayData.category : '');
+
+                dayDiv.innerHTML = `
+                    <div class="cal-day-num">${day}</div>
+                    <div class="cal-day-desc">${descText}</div>
+                    <div class="cal-day-income">${breakdown.total > 0 ? 'Rp ' + breakdown.total.toLocaleString('id-ID') : ''}</div>
+                `;
+                container.appendChild(dayDiv);
             }
-          }
-        });
-      }
-    }
+        }
 
-    document.addEventListener("DOMContentLoaded", function() {
-      initYearOptions();
-      initDragScroll();
+        function openDayModal(day) {
+            modalSelectedDay = day;
+            let period = `${otSelectedYear}_${otSelectedMonth}`;
+            let monthData = JSON.parse(localStorage.getItem('finpulse_ot_cal_' + period)) || {};
+            let dayData = monthData[day] || null;
+            let customHolidays = getCustomHolidays();
+            let holidayKey = `${otSelectedYear}-${otSelectedMonth}-${day}`;
+            let isHoliday = customHolidays[holidayKey] !== undefined;
+            let dayOfWeek = new Date(otSelectedYear, otSelectedMonth, day).getDay();
+            let isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
 
-      document.getElementById('btn_nav_tab1').addEventListener('click', function() {
-        switchTab('tab1', this);
-      });
-      document.getElementById('btn_nav_tab2').addEventListener('click', function() {
-        switchTab('tab2', this);
-      });
-      document.getElementById('btn_nav_tab3').addEventListener('click', function() {
-        switchTab('tab3', this);
-      });
+            document.getElementById('modalDateTitle').innerText = `Tanggal ${day} ${monthNamesCap[otSelectedMonth]} ${otSelectedYear}`;
 
-      const now = new Date();
-      document.getElementById('sel_bulan').value = now.getMonth() + 1;
-      document.getElementById('sel_tahun').value = now.getFullYear();
-      loadData();
-    });
-  </script>
-</body>
-</html>
+            let breakdown = calculateDetailedDayIncome(dayData, isWeekend || isHoliday);
 
-  <script>
-    
-  </script>
+            let infoHtml = `<b>Status Hari:</b> ${isHoliday ? '<span style="color:#f87171">Tanggal Merah / Libur</span>' : (isWeekend ? '<span style="color:#f87171">Weekend (Libur)</span>' : 'Hari Kerja Normal')}<br><br>`;
+            
+            if(dayData) {
+                infoHtml += `<b>Aktivitas:</b> ${dayData.category} (${dayData.desc || 'Tanpa deskripsi'})<br>`;
+                infoHtml += `<b>Jam Kerja:</b> ${dayData.hours} Jam<br><br>`;
+                infoHtml += `<b>Rincian Pendapatan:</b><br>`;
+                infoHtml += `- OT (Overtime): Rp ${breakdown.ot.toLocaleString('id-ID')}<br>`;
+                infoHtml += `- TN/TW (Travel): Rp ${breakdown.travel.toLocaleString('id-ID')}<br>`;
+                infoHtml += `- FA (Field Allowance): Rp ${breakdown.fa.toLocaleString('id-ID')}<br>`;
+                infoHtml += `<div style="margin-top: 8px; font-size: 0.95rem; font-weight: 700; color: #34d399;">Total Pendapatan: Rp ${breakdown.total.toLocaleString('id-ID')}</div>`;
+            } else {
+                infoHtml += `Belum ada aktivitas tercatat pada tanggal ini.`;
+            }
+            document.getElementById('modalDayInfo').innerHTML = infoHtml;
+
+            let btnH = document.getElementById('btnToggleHoliday');
+            if(isHoliday) {
+                btnH.innerText = "Ubah Menjadi Tanggal Hitam (Hari Kerja)";
+                btnH.style.background = "rgba(56, 189, 248, 0.1)";
+                btnH.style.borderColor = "rgba(56, 189, 248, 0.3)";
+                btnH.style.color = "#38bdf8";
+            } else {
+                btnH.innerText = "Ubah Menjadi Tanggal Merah (Libur)";
+                btnH.style.background = "rgba(248, 113, 113, 0.1)";
+                btnH.style.borderColor = "rgba(248, 113, 113, 0.3)";
+                btnH.style.color = "#f87171";
+            }
+
+            document.getElementById('dayModalOverlay').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('dayModalOverlay').style.display = 'none';
+        }
+
+        function toggleHolidayStatus() {
+            if(!modalSelectedDay) return;
+            let customHolidays = getCustomHolidays();
+            let holidayKey = `${otSelectedYear}-${otSelectedMonth}-${modalSelectedDay}`;
+
+            if(customHolidays[holidayKey] !== undefined) {
+                delete customHolidays[holidayKey];
+            } else {
+                customHolidays[holidayKey] = "Custom Libur";
+            }
+            localStorage.setItem('finpulse_holidays', JSON.stringify(customHolidays));
+            openDayModal(modalSelectedDay);
+            renderCalendar();
+            calculateAll();
+        }
+
+        function calculateDetailedDayIncome(dData, isWeekendOrHoliday) {
+            if(!dData) return { ot: 0, travel: 0, fa: 0, total: 0 };
+
+            let baseSalary = getCleanNumber('baseSalary');
+            let hourlyRate = baseSalary / 173;
+            let totalH = parseFloat(dData.hours) || 0;
+            let ot = 0, travel = 0, fa = 0;
+
+            if(dData.category === 'OT') {
+                if(totalH > 8) {
+                    let overtimeH = totalH - 8;
+                    if(!isWeekendOrHoliday) {
+                        let remaining = overtimeH;
+                        let hIndex = 1;
+                        while(remaining > 0) {
+                            let step = Math.min(remaining, 1);
+                            let multiplier = (hIndex === 1) ? 1.5 : 2.0;
+                            ot += step * hourlyRate * multiplier;
+                            remaining -= step;
+                            hIndex++;
+                        }
+                    } else {
+                        let remaining = totalH;
+                        let hIndex = 1;
+                        while(remaining > 0) {
+                            let step = Math.min(remaining, 1);
+                            let multiplier = 2.0;
+                            if(hIndex === 9) multiplier = 3.0;
+                            else if(hIndex > 9) multiplier = 4.0;
+                            ot += step * hourlyRate * multiplier;
+                            remaining -= step;
+                            hIndex++;
+                        }
+                    }
+                }
+            } else if(dData.category === 'TN') {
+                if(!isWeekendOrHoliday) {
+                    let overtimeH = Math.max(0, totalH - 8);
+                    travel += overtimeH * hourlyRate * 1;
+                }
+            } else if(dData.category === 'TW') {
+                if(isWeekendOrHoliday) {
+                    travel += totalH * hourlyRate * 1.5;
+                }
+            }
+
+            if(dData.fieldAllowance) {
+                fa += 500000;
+            }
+
+            let rOt = Math.round(ot);
+            let rTr = Math.round(travel);
+            let rFa = Math.round(fa);
+            return { ot: rOt, travel: rTr, fa: rFa, total: rOt + rTr + rFa };
+        }
+
+        function saveRangeActivity() {
+            let start = new Date(document.getElementById('inputStartDate').value);
+            let end = new Date(document.getElementById('inputEndDate').value);
+            let category = document.getElementById('inputCategory').value;
+            let desc = document.getElementById('inputDesc').value;
+            let hours = parseFloat(document.getElementById('inputHours').value) || 0;
+            let fieldAllowance = document.getElementById('inputFA').checked;
+
+            if(isNaN(start) || isNaN(end) || start > end) {
+                alert("Periksa kembali rentang tanggal Anda.");
+                return;
+            }
+
+            let period = `${otSelectedYear}_${otSelectedMonth}`;
+            let monthData = JSON.parse(localStorage.getItem('finpulse_ot_cal_' + period)) || {};
+
+            let curr = new Date(start);
+            while(curr <= end) {
+                if(curr.getFullYear() === otSelectedYear && curr.getMonth() === otSelectedMonth) {
+                    let d = curr.getDate();
+                    monthData[d] = { category, desc, hours, fieldAllowance };
+                }
+                curr.setDate(curr.getDate() + 1);
+            }
+
+            localStorage.setItem('finpulse_ot_cal_' + period, JSON.stringify(monthData));
+            renderCalendar();
+            calculateAll();
+            alert("Data aktivitas berhasil disimpan!");
+        }
+
+        function clearMonthOtData() {
+            if(confirm(`Apakah Anda yakin ingin menghapus seluruh data lembur/aktivitas untuk bulan ${monthNamesCap[otSelectedMonth]} ${otSelectedYear}?`)) {
+                let period = `${otSelectedYear}_${otSelectedMonth}`;
+                localStorage.removeItem('finpulse_ot_cal_' + period);
+                renderCalendar();
+                calculateAll();
+                alert("Data lembur bulan ini berhasil dihapus.");
+            }
+        }
+
+
+        /* --- GLOBAL CALCULATION --- */
+        function calculateAll() {
+            let period = getPeriodKey();
+            let monthData = JSON.parse(localStorage.getItem('finpulse_ot_cal_' + period)) || {};
+            let customHolidays = getCustomHolidays();
+
+            let totalOT = 0, totalTN = 0, totalTW = 0, totalFA = 0;
+
+            for(let day in monthData) {
+                let dData = monthData[day];
+                let dateObj = new Date(otSelectedYear, otSelectedMonth, parseInt(day));
+                let dayOfWeek = dateObj.getDay();
+                let isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+                let holidayKey = `${otSelectedYear}-${otSelectedMonth}-${day}`;
+                let isHoliday = customHolidays[holidayKey] !== undefined;
+
+                let breakdown = calculateDetailedDayIncome(dData, isWeekend || isHoliday);
+                
+                if(dData.category === 'OT') totalOT += breakdown.ot;
+                if(dData.category === 'TN') totalTN += breakdown.travel;
+                if(dData.category === 'TW') totalTW += breakdown.travel;
+                totalFA += breakdown.fa;
+            }
+
+            let rOT = Math.round(totalOT);
+            let rTN = Math.round(totalTN);
+            let rTW = Math.round(totalTW);
+            let rFA = Math.round(totalFA);
+
+            document.getElementById('autoOvertime').value = rOT.toLocaleString('id-ID');
+            document.getElementById('autoTN').value = rTN.toLocaleString('id-ID');
+            document.getElementById('autoTW').value = rTW.toLocaleString('id-ID');
+            document.getElementById('autoFA').value = rFA.toLocaleString('id-ID');
+
+            let baseSalary = getCleanNumber('baseSalary');
+            let allowance = getCleanNumber('allowance');
+            let bonus = getCleanNumber('bonus');
+            let combinedAutoSum = rOT + rTN + rTW + rFA;
+            let totalIncome = baseSalary + allowance + bonus + combinedAutoSum;
+
+            let totalOutcome = 0;
+            document.querySelectorAll('#tabPersonal .out-val').forEach(input => {
+                totalOutcome += getCleanNumberFromEl(input);
+            });
+
+            let netBalance = totalIncome - totalOutcome;
+            let percentage = totalIncome > 0 ? Math.min(Math.round((totalOutcome / totalIncome) * 100), 100) : 0;
+
+            document.getElementById('cardIncome').innerText = "Rp " + totalIncome.toLocaleString('id-ID');
+            document.getElementById('cardOutcome').innerText = "Rp " + totalOutcome.toLocaleString('id-ID');
+            
+            document.getElementById('progressPercentage').innerText = percentage + "%";
+            document.getElementById('progressBarFill').style.width = percentage + "%";
+            
+            let netEl = document.getElementById('netBalanceVal');
+            netEl.innerText = "Rp " + netBalance.toLocaleString('id-ID');
+            netEl.style.color = netBalance < 0 ? "#f87171" : "#34d399";
+
+            let safeBalance = netBalance > 0 ? netBalance : 0;
+            document.getElementById('allocEmergency').innerText = "Rp " + Math.round(safeBalance * 0.10).toLocaleString('id-ID');
+            document.getElementById('allocEducation').innerText = "Rp " + Math.round(safeBalance * 0.10).toLocaleString('id-ID');
+            document.getElementById('allocGold').innerText = "Rp " + Math.round(safeBalance * 0.10).toLocaleString('id-ID');
+            document.getElementById('allocStocks').innerText = "Rp " + Math.round(safeBalance * 0.10).toLocaleString('id-ID');
+            document.getElementById('allocHoliday').innerText = "Rp " + Math.round(safeBalance * 0.40).toLocaleString('id-ID');
+            document.getElementById('allocReward').innerText = "Rp " + Math.round(safeBalance * 0.20).toLocaleString('id-ID');
+        }
+    </script>
 </body>
 </html>
